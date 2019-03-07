@@ -1,0 +1,90 @@
+html,body{
+    height: 100%;
+    
+}
+body{
+    color: #ffffff;
+    background-color: #404552;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    user-select: none;
+    margin: 0px;
+    padding: 0px;
+}
+.browser{
+    width: 100%;
+    height: 100%;
+    flex: 1;
+}
+
+.title-bar{
+    -webkit-app-region: drag;
+    background-color: #000000; 
+    height: 30px;
+    width: 100%;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+.no-drag{
+    -webkit-app-region: no-drag;
+}
+.search-bar{
+    height: 35px;
+    line-height: 2;
+}
+.search-bar .nav-search-container{
+    position: relative;
+
+}
+.search-bar .search-text{
+    width: 70%;
+    flex: 1;
+    margin-left: 80px;
+    height: 20px;
+}
+.search-bar .search-button{
+    position: absolute;
+    top: 37px;
+}
+.search-bar .navigation{
+    position: absolute;
+    top: 37px;
+    left: 33px;
+}
+
+.search-bar .navigation.first{
+    left: 2px;
+}
+.title-bar .material-icons{
+    margin: 0px 10px;
+    font-size: 20px;
+}.title-bar .material-icons:hover{
+    color: #58a3ff;
+}
+.title-bar .material-icons:active{
+    color: #5294e2;
+}
+.title-bar #close:hover{
+    color: #ff5858;
+}
+.title-bar #close:active{
+    color: #e25252;
+}
+.title-bar li{
+    -webkit-app-region: no-drag;
+    display: inline-block;
+    float: right;
+    line-height: 1.5;
+    cursor: pointer;
+}
+.title-bar ul .tab{
+    width: 100px;
+    height: 30px;
+    background-color: #333333;
+    float: left;
+    text-align: center;
+    line-height: 2;
+    border-right: 1px solid #8a8a8a;
+}

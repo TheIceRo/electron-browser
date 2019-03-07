@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" media="screen" href="reset.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css"> 
+    <script src="browser.js"></script>
+</head>
+<body>
+    <nav class="title-bar">
+        <ul>
+            <li class="tab">
+                text
+            </li>
+            <li id="close" class="material-icons">close</li>
+            <li id="maximize" class="material-icons">crop_square</li>
+            <li id="minimize" class="material-icons">remove</li>
+        </ul>
+    </nav>
+    <div class="search-bar title-bar no-drag">
+        <a class="navigation first material-icons">arrow_back</a>
+        <a class="navigation material-icons">arrow_forward</a>
+        <input id="search-field" class="search-text" type="text">
+        <a id="search-button" class="search-button material-icons">search</a>
+        </div>
+
+    </div>
+
+    </div>
+    <webview id="browser" src="https://www.google.com/" class="browser"></webview>
+</body>
+</html>
