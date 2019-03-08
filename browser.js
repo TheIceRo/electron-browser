@@ -8,6 +8,9 @@ var page = {
     "link":"google.com",
 
 }
+var userPrefs = {
+    "homepage":"https://google.com",
+}
 function correctTerms(text){    
     if(text.includes("https://")||text.includes("http://")){
         return(text);   
@@ -54,12 +57,14 @@ function loadListeners(){
     });
     searchBar.addEventListener("keydown",function(event){
         if(event.keyCode==13){
-            var searchTerm = document.getElementById("search-field").value;
-            search(searchTerm);
+            search(searchBar.value);
         }
     });
     document.getElementById("search-button").addEventListener("click",function(event){
-        search(search.value);
+        search(searchBar.value);
+    });
+    document.getElementById("home-button").addEventListener("click",function(event){
+        search(userPrefs.homepage);
     });
     document.getElementById("nav-back").addEventListener("click",function(event){
         if(webview.canGoBack())

@@ -46,19 +46,28 @@ body{
     width: 60%;
     flex: 1;
     height: 20px;
-    color: #ffffff;
+    color: #dbdbdb;
     background-color: #222222;
     border: 1px solid #cccccc;
-    border-radius: 5px;
+    border-radius: 6px;
+
     padding: 0px 5px;
 }
 .search-bar .search-text:focus{
     border-color: #5294e2;
+    color: #ffffff;
+    border-radius: 4px;
 }
 .search-bar .search-button{
     position: absolute;
     top: 37px;
+
+}
+.search-bar #search-button{
     left: 81%;
+}
+.search-bar #home-button{
+    right: 80%;
 }
 .search-bar .navigation{
     position: absolute;
@@ -100,4 +109,9 @@ body{
     line-height: 2.3;
     border-right: 1px solid #8a8a8a;
     font-size: 14px;
+}
+.title-bar ul #new-tab{
+    float: left;
+    font-size: 24px;
+    line-height: 1.3;
 }
