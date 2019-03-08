@@ -14,24 +14,25 @@
 <body>
     <nav class="title-bar">
         <ul>
-            <li class="tab">
-                text
-            </li>
             <li id="close" class="material-icons">close</li>
             <li id="maximize" class="material-icons">crop_square</li>
             <li id="minimize" class="material-icons">remove</li>
+            <li class="tab">
+                <p class="tab-title">Title</p>
+                <i class="material-icons"></i>
+            </li>
+
         </ul>
     </nav>
     <div class="search-bar title-bar no-drag">
-        <a class="navigation first material-icons">arrow_back</a>
-        <a class="navigation material-icons">arrow_forward</a>
+        <a id="nav-back" class="navigation first material-icons">arrow_back</a>
+        <a id="nav-forward" class="navigation material-icons">arrow_forward</a>
         <input id="search-field" class="search-text" type="text">
         <a id="search-button" class="search-button material-icons">search</a>
         </div>
-
     </div>
 
     </div>
-    <webview id="browser" src="https://www.google.com/" class="browser"></webview>
+    <webview id="browser" src="test.html" class="browser"></webview>
 </body>
 </html>

@@ -2,6 +2,37 @@ const remote = require('electron').remote;
 var fs = require("fs");
 var maximized = false;
 var urlExists = require('url-exists');
+var webview;
+var searchBar;
+var page = {
+    "link":"google.com",
+
+}
+function correctTerms(text){    
+    if(text.includes("https://")||text.includes("http://")){
+        return(text);   
+    }
+    if(text.includes(".")){
+        return("http://"+text);
+    }
+    else{
+        return("https://google.com/search?q="+text.replace(/ /g, "+"))
+    }
+}
+function checkPage(page){
+    urlExists(page, function(err, exists) {
+        if(exists)
+        loadPage(page);
+    });
+}
+function loadPage(page){
+    webview.setAttribute("src",page);
+}
+function search(search){
+    checkPage(correctTerms(search));
+}
+
+
 
 function loadListeners(){
     var window = remote.getCurrentWindow();
@@ -21,38 +52,32 @@ function loadListeners(){
             window.maximize();
         }
     });
-    document.getElementById("search-field").addEventListener("keydown",function(event){
+    searchBar.addEventListener("keydown",function(event){
         if(event.keyCode==13){
             var searchTerm = document.getElementById("search-field").value;
             search(searchTerm);
         }
     });
     document.getElementById("search-button").addEventListener("click",function(event){
-        var searchTerm = document.getElementById("search-field").value;
-        search(searchTerm);
+        search(search.value);
+    });
+    document.getElementById("nav-back").addEventListener("click",function(event){
+        if(webview.canGoBack())
+        webview.goBack();
+    });
+    document.getElementById("nav-forward").addEventListener("click",function(event){
+        if(webview.canGoForward())
+        webview.goForward();
+    });
+    webview.addEventListener("did-stop-loading",function(){
+        document.getElementsByClassName("tab")[0].innerHTML = webview.getTitle();
+        searchBar.value = webview.getURL();
     });
 }
-function search(search){
-    checkPage(correctTerms(search));
-}
-function correctTerms(text){    
-    if(text.includes("https://")||text.includes("http://")){
-        return(text);   
-    }
-    else{
-        return("http://"+text);
-    }
-}
-function loadPage(page){
-    document.getElementById("browser").setAttribute("src",page);
-}
-function checkPage(page){
-    urlExists(page, function(err, exists) {
-        if(exists)
-        loadPage(page);
-    });
-}
+
 function start(){
+    webview = document.getElementById("browser");
+    searchBar = document.getElementById("search-field");
     loadListeners();
 }
 document.addEventListener("DOMContentLoaded",function(){
