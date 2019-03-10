@@ -48,10 +48,11 @@ body{
     height: 20px;
     color: #dbdbdb;
     background-color: #222222;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
+    border: 1px solid #b4b4b4;
+    border-radius: 8px;
 
-    padding: 0px 5px;
+    padding: 0px 8px;
+    transition: all, 0.1s;
 }
 .search-bar .search-text:focus{
     border-color: #5294e2;
@@ -60,18 +61,22 @@ body{
 }
 .search-bar .search-button{
     position: absolute;
-    top: 37px;
+    top: 38px;
 
 }
 .search-bar #search-button{
     left: 81%;
+    display: none;
 }
 .search-bar #home-button{
     right: 80%;
 }
+.search-bar #refresh-button{
+    left: 64px;
+}
 .search-bar .navigation{
     position: absolute;
-    top: 37px;
+    top: 38px;
     left: 33px;
 }
 
@@ -95,23 +100,34 @@ body{
 }
 .title-bar li{
     -webkit-app-region: no-drag;
-    display: inline-block;
     float: right;
     line-height: 1.5;
     cursor: pointer;
 }
 .title-bar ul .tab{
-    padding: 0px 15px;
+    padding: 0px 10px;
     height: 30px;
     background-color: #333333;
     float: left;
-    text-align: center;
     line-height: 2.3;
     border-right: 1px solid #8a8a8a;
     font-size: 14px;
+    min-width: 100px;
 }
 .title-bar ul #new-tab{
     float: left;
     font-size: 24px;
     line-height: 1.3;
+    margin: 0px 4px;
+}
+@media only screen and (max-width:550){
+    .search-bar .search-button{
+        display: none;
+    }
+    .search-bar #home-button{
+        display: none;
+    }
+    body{
+        background-color: #58a3ff;
+    }
 }

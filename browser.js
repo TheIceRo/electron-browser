@@ -1,9 +1,16 @@
+const {BrowserWindow} = require("electron").remote;
 const remote = require('electron').remote;
+const nativeImage = require('electron').nativeImage; 
+let image = nativeImage.createEmpty(); 
 var fs = require("fs");
-var maximized = false;
 var urlExists = require('url-exists');
 var webview;
 var searchBar;
+var currTab = 0;
+
+
+
+
 var page = {
     "link":"google.com",
 
@@ -11,6 +18,7 @@ var page = {
 var userPrefs = {
     "homepage":"https://google.com",
 }
+
 function correctTerms(text){    
     if(text.includes("https://")||text.includes("http://")){
         return(text);   
@@ -34,7 +42,12 @@ function loadPage(page){
 function search(search){
     checkPage(correctTerms(search));
 }
-
+function snipTitle(text){
+    if(text.length > 20){
+        return text.substring(0,20)+"...";
+    }
+    return text;
+}
 
 
 function loadListeners(){
@@ -46,12 +59,10 @@ function loadListeners(){
         window.minimize();
     });
     document.getElementById("maximize").addEventListener("click",function(){
-        if(maximized){
+        if(window.isMaximized()){
             window.restore();
-            maximized = false;
         }
         else{
-            maximized = true;
             window.maximize();
         }
     });
@@ -66,6 +77,9 @@ function loadListeners(){
     document.getElementById("home-button").addEventListener("click",function(event){
         search(userPrefs.homepage);
     });
+    document.getElementById("refresh-button").addEventListener("click",function(event){
+        webview.reload();
+    });
     document.getElementById("nav-back").addEventListener("click",function(event){
         if(webview.canGoBack())
         webview.goBack();
@@ -74,16 +88,37 @@ function loadListeners(){
         if(webview.canGoForward())
         webview.goForward();
     });
-    webview.addEventListener("did-stop-loading",function(){
-        document.getElementsByClassName("tab")[0].innerHTML = webview.getTitle();
-        searchBar.value = webview.getURL();
+}
+function addWebviewListeners(wview){
+    wview.addEventListener("did-start-loading",function(){
+        document.getElementsByClassName("tab")[currTab].innerHTML = "Loading...";
     });
+    wview.addEventListener("dom-ready",function(){
+        document.getElementsByClassName("tab")[currTab].innerHTML = snipTitle(wview.getTitle());
+        searchBar.value = wview.getURL();
+    });
+    wview.addEventListener("did-stop-loading",function(){
+        document.getElementsByClassName("tab")[currTab].innerHTML = snipTitle(wview.getTitle());
+        searchBar.value = wview.getURL();
+    });
+    wview.addEventListener('new-window', (e) => {
+        const protocol = require('url').parse(e.url).protocol;
+        if (protocol === 'http:' || protocol === 'https:') 
+        {
+            let win = new BrowserWindow({width:900,height:720,frame:true,resizable:true,backgroundColor:"#383c4a",icon:image});
+            win.setMenuBarVisibility(false);
+            win.on('close', ()=>{win=null});
+            win.loadURL(e.url);
+            win.show();
+        }
+    })
 }
 
 function start(){
-    webview = document.getElementById("browser");
+    webview = document.getElementsByClassName("browser")[0];
     searchBar = document.getElementById("search-field");
     loadListeners();
+    addWebviewListeners(webview);
 }
 document.addEventListener("DOMContentLoaded",function(){
     start();
