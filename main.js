@@ -9,7 +9,7 @@ let window;
 
 // Listen for app ready
 app.on("ready",function(){
-    window = new BrowserWindow({width:1280,height:720,minHeight:650,minWidth:500,frame:false,title:"Loading...",resizable:true,backgroundColor:"#404552",icon:image})
+    window = new BrowserWindow({width:1280,height:720,minHeight:650,minWidth:670,frame:false,title:"Loading...",resizable:true,backgroundColor:"#404552",icon:image})
     window.loadURL(url.format({
         pathname: path.join(__dirname,"index.html"),
         protocol: 'file',

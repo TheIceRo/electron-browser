@@ -4,6 +4,8 @@ const nativeImage = require('electron').nativeImage;
 let image = nativeImage.createEmpty(); 
 var fs = require("fs");
 var urlExists = require('url-exists');
+const url = require('url');
+const path = require('path');
 var webview;
 var searchBar;
 var currTab = 0;
@@ -43,28 +45,37 @@ function search(search){
     checkPage(correctTerms(search));
 }
 function snipTitle(text){
-    if(text.length > 20){
-        return text.substring(0,20)+"...";
+    if(text.length > 25){
+        return text.substring(0,25)+"...";
     }
     return text;
 }
-
-
-function loadListeners(){
+function closeWindow(){
     var window = remote.getCurrentWindow();
+    window.close();
+}
+function minimizeWindow(){
+    var window = remote.getCurrentWindow();
+    window.minimize();
+}
+function toggleMaximizeWindow(){
+    var window = remote.getCurrentWindow();
+    if(window.isMaximized()){
+        window.restore();
+    }
+    else{
+        window.maximize();
+    }
+}
+function loadListeners(){
     document.getElementById("close").addEventListener("click",function(){
-        window.close()
+        closeWindow();
     });
     document.getElementById("minimize").addEventListener("click",function(){
-        window.minimize();
+        minimizeWindow();
     });
     document.getElementById("maximize").addEventListener("click",function(){
-        if(window.isMaximized()){
-            window.restore();
-        }
-        else{
-            window.maximize();
-        }
+        toggleMaximizeWindow();
     });
     searchBar.addEventListener("keydown",function(event){
         if(event.keyCode==13){
@@ -73,6 +84,9 @@ function loadListeners(){
     });
     document.getElementById("search-button").addEventListener("click",function(event){
         search(searchBar.value);
+    });
+    document.getElementById("options-button").addEventListener("click",function(event){
+        setToggle("options-panel");
     });
     document.getElementById("home-button").addEventListener("click",function(event){
         search(userPrefs.homepage);
@@ -88,6 +102,54 @@ function loadListeners(){
         if(webview.canGoForward())
         webview.goForward();
     });
+}
+function newWindow(){
+    let win = new BrowserWindow({width:1200,height:720,frame:false,resizable:true,backgroundColor:"#404552",icon:image});
+    win.on('close', ()=>{win=null});
+    win.loadURL(url.format({
+        pathname: path.join(__dirname,"index.html"),
+        protocol: 'file',
+        slashes:true
+    }));
+    win.show();
+}
+function newTab(){
+    var tab = document.getElementsByClassName("tab")[0];
+    var tabContainer = document.getElementsByClassName("tab-container")[0];
+    var tab_clone = tab.cloneNode(true);
+    let browser = document.getElementsByClassName("browser")[0].cloneNode(true);
+    document.getElementsByTagName("body").appendChild(browser);
+    tab_clone.addEventListener("click",function(event){
+        disableWebviews();
+        browser.classList.remove("hidden");
+    });
+    tabContainer.appendChild(tab_clone);
+}
+function disableWebviews(){
+    let browser = document.getElementsByClassName("browser");
+    for(var i;i<browser.length;i++){
+        if(!browser.classList.contains("hidden"))
+        browser[i].classList.add("hidden");
+    }
+}
+function setToggle(menu){
+    option = document.getElementsByClassName(menu)[0];
+    if(option.classList.contains("toggle")){
+        option.classList.remove("toggle");
+    }
+    else{
+        option.classList.add("toggle");
+    }
+}
+function toggleOn(menu){
+    option = document.getElementsByClassName(menu)[0];
+    if(!option.classList.contains("toggle"))
+        option.classList.add("toggle");
+}
+function toggleOff(menu){
+    option = document.getElementsByClassName(menu)[0];
+    if(option.classList.contains("toggle"))
+        option.classList.remove("toggle");
 }
 function addWebviewListeners(wview){
     wview.addEventListener("did-start-loading",function(){
@@ -111,11 +173,11 @@ function addWebviewListeners(wview){
             win.loadURL(e.url);
             win.show();
         }
-    })
+    });
 }
 
 function start(){
-    webview = document.getElementsByClassName("browser")[0];
+    webview = document.getElementsByClassName("browser")[1];
     searchBar = document.getElementById("search-field");
     loadListeners();
     addWebviewListeners(webview);
