@@ -2,6 +2,7 @@ const {BrowserWindow} = require("electron").remote;
 const remote = require('electron').remote;
 const nativeImage = require('electron').nativeImage; 
 let image = nativeImage.createEmpty(); 
+const shell = require('electron').shell;
 var fs = require("fs");
 var urlExists = require('url-exists');
 const url = require('url');
@@ -20,8 +21,13 @@ var page = {
 var userPrefs = {
     "homepage":"https://google.com",
 }
-
-function correctTerms(text){    
+function correctTerms(text){
+    if(text.includes("file:///")){
+        return(text);
+    }    
+    if(text.includes("C:/")){
+        return("file:///"+text);
+    }
     if(text.includes("https://")||text.includes("http://")){
         return(text);   
     }
@@ -33,6 +39,9 @@ function correctTerms(text){
     }
 }
 function checkPage(page){
+    if(page.includes("file:///")){
+        loadPage(page);
+    }
     urlExists(page, function(err, exists) {
         if(exists)
         loadPage(page);
@@ -45,8 +54,8 @@ function search(search){
     checkPage(correctTerms(search));
 }
 function snipTitle(text){
-    if(text.length > 25){
-        return text.substring(0,25)+"...";
+    if(text.length > 20){
+        return text.substring(0,20)+"...";
     }
     return text;
 }
@@ -113,6 +122,12 @@ function newWindow(){
     }));
     win.show();
 }
+function inspectWebview(){
+    webview.openDevTools();
+}
+function openExt(page){
+    shell.openExternal(page);
+}
 function newTab(){
     var tab = document.getElementsByClassName("tab")[0];
     var tabContainer = document.getElementsByClassName("tab-container")[0];
@@ -153,27 +168,30 @@ function toggleOff(menu){
 }
 function addWebviewListeners(wview){
     wview.addEventListener("did-start-loading",function(){
-        document.getElementsByClassName("tab")[currTab].innerHTML = "Loading...";
+        document.getElementsByClassName("tab-title")[1].innerHTML = "Loading...";
     });
     wview.addEventListener("dom-ready",function(){
-        document.getElementsByClassName("tab")[currTab].innerHTML = snipTitle(wview.getTitle());
+        document.getElementsByClassName("tab-title")[1].innerHTML = snipTitle(wview.getTitle());
         searchBar.value = wview.getURL();
     });
     wview.addEventListener("did-stop-loading",function(){
-        document.getElementsByClassName("tab")[currTab].innerHTML = snipTitle(wview.getTitle());
+        document.getElementsByClassName("tab-title")[1].innerHTML = snipTitle(wview.getTitle());
         searchBar.value = wview.getURL();
     });
     wview.addEventListener('new-window', (e) => {
-        const protocol = require('url').parse(e.url).protocol;
-        if (protocol === 'http:' || protocol === 'https:') 
-        {
-            let win = new BrowserWindow({width:900,height:720,frame:true,resizable:true,backgroundColor:"#383c4a",icon:image});
-            win.setMenuBarVisibility(false);
-            win.on('close', ()=>{win=null});
-            win.loadURL(e.url);
-            win.show();
-        }
+        openNewWindow(e.url);
     });
+}
+function openNewWindow(link){
+    const protocol = require('url').parse(e.url).protocol;
+    if (protocol === 'http:' || protocol === 'https:') 
+    {
+        let win = new BrowserWindow({width:900,height:720,frame:true,resizable:true,backgroundColor:"#383c4a",icon:image});
+        win.setMenuBarVisibility(false);
+        win.on('close', ()=>{win=null});
+        win.loadURL(link);
+        win.show();
+    }
 }
 
 function start(){

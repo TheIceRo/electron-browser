@@ -27,7 +27,7 @@
             <li id="minimize" class="material-icons">remove</li>
             <li id="tab-container" class="tab-container">
                 <li class="tab">
-                    <p class="tab-title">Page Title</p>
+                    <p class="tab-title">Title</p>
                 </li>
             </li>
             <li id="new-tab" class="material-icons">add_box</li>
@@ -47,18 +47,19 @@
         <li onclick="newWindow();setToggle('options-panel');">New window</li>
         <li onclick="setToggle('options-panel');">New tab</li>
         <li onclick="setToggle('options-panel'); toggleOn('about-panel');">About</li>
+        <li onclick="setToggle('options-panel'); inspectWebview();">Open DevTools</li>
         <li onclick="setToggle('options-panel');">Test Disappear</li>
         <li onclick="closeWindow();setToggle('options-panel');">Exit</li>
     </div>
     <ul class="about-panel" id="about-panel">
         <h2>built with</h2>
-        <img class="electron-logo" src="media/electron-logo.png" alt="electron logo">
+        <img onclick= 'openExt("https://electronjs.org/")' class="electron-logo" src="media/electron-logo.png" alt="electron logo">
         <p class="close" onclick="toggleOff('about-panel');">Close</p>
         <p class="info">
             This app is built with Electron and Node.js. Yes, I know Electron is already based on Chromium, but I wanted to see how far I could push it's features. 
         </p>
         <h2>contribute</h2>
-        <a href="https://github.com/TheIceRo/electron-browser"><img class="github-logo" src="media/GitHub_Logo_White.png" alt="github logo"></a>
+        <a onclick='openExt("https://github.com/TheIceRo/electron-browser")'><img class="github-logo" src="media/GitHub_Logo_White.png" alt="github logo"></a>
     </ul>
 
     <webview src="test.html" class="browser"></webview>
