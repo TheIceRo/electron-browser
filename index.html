@@ -16,7 +16,8 @@
     <div class="defaults hidden">
         <webview src="test.html" class="browser hidden"></webview>
         <li class="tab">
-                <p class="tab-title">Page Title</p>
+            <p class="tab-title">Page Title</p>
+            <i class="close-tab material-icons">close</i>
         </li>
     </div>
     <nav class="title-bar">
@@ -25,11 +26,8 @@
             <li id="close" class="material-icons">close</li>
             <li id="maximize" class="material-icons">crop_square</li>
             <li id="minimize" class="material-icons">remove</li>
-            <li id="tab-container" class="tab-container">
-                <li class="tab">
-                    <p class="tab-title">Title</p>
-                </li>
-            </li>
+            <ul id="tab-container" class="tab-container">
+            </ul>
             <li id="new-tab" class="material-icons">add_box</li>
         </ul>
     </nav>
@@ -45,9 +43,9 @@
     </div>
     <div id="options-panel" class="options-panel">
         <li onclick="newWindow();setToggle('options-panel');">New window</li>
-        <li onclick="setToggle('options-panel');">New tab</li>
-        <li onclick="setToggle('options-panel'); toggleOn('about-panel');">About</li>
-        <li onclick="setToggle('options-panel'); inspectWebview();">Open DevTools</li>
+        <li onclick="newTab(); setToggle('options-panel');">New tab</li>
+        <li onclick="toggleOn('about-panel'); setToggle('options-panel');">About</li>
+        <li onclick="inspectWebview();setToggle('options-panel');">Open DevTools</li>
         <li onclick="setToggle('options-panel');">Test Disappear</li>
         <li onclick="closeWindow();setToggle('options-panel');">Exit</li>
     </div>
@@ -61,8 +59,5 @@
         <h2>contribute</h2>
         <a onclick='openExt("https://github.com/TheIceRo/electron-browser")'><img class="github-logo" src="media/GitHub_Logo_White.png" alt="github logo"></a>
     </ul>
-
-    <webview src="test.html" class="browser"></webview>
-    
 </body>
 </html>

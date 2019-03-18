@@ -85,6 +85,10 @@ body{
     top: 38px;
     right: 2px;
 }
+.search-bar #options-button:active>.options-panel{
+    top: 66px;
+    z-index: 50;
+}
 .search-bar .navigation{
     position: absolute;
     top: 38px;
@@ -93,7 +97,7 @@ body{
 .options-panel{
     list-style: none;
     border: 1px solid #222222;
-    top: -130px;
+    top: -131px;
     right: 0px;
     transition: all, 0.2s;
     padding: 5px 0px;
@@ -208,13 +212,26 @@ body{
 .title-bar ul .tab{
     padding: 0px 10px;
     height: 30px;
-    background-color: #333333;
+
     float: left;
     line-height: 2.3;
     border-right: 1px solid #8a8a8a;
     font-size: 14px;
     min-width: 100px;
     cursor: default;
+    position: relative;
+}
+.title-bar ul .tab:hover .close-tab{
+    display: block;
+}
+.title-bar ul .tab.selected{
+    background-color: #333333;
+}
+.tab .close-tab{
+    display: none;
+    position: absolute;
+    right: -5px;
+    top: 5px;
 }
 .title-bar ul #new-tab{
     color: #444444; 

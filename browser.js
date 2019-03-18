@@ -9,10 +9,9 @@ const url = require('url');
 const path = require('path');
 var webview;
 var searchBar;
-var currTab = 0;
 
-
-
+var tabCount = 0;
+var currentTab = null;
 
 var page = {
     "link":"google.com",
@@ -111,6 +110,9 @@ function loadListeners(){
         if(webview.canGoForward())
         webview.goForward();
     });
+    document.getElementById("new-tab").addEventListener("click",function(event){
+        newTab();
+    });
 }
 function newWindow(){
     let win = new BrowserWindow({width:1200,height:720,frame:false,resizable:true,backgroundColor:"#404552",icon:image});
@@ -133,19 +135,34 @@ function newTab(){
     var tabContainer = document.getElementsByClassName("tab-container")[0];
     var tab_clone = tab.cloneNode(true);
     let browser = document.getElementsByClassName("browser")[0].cloneNode(true);
-    document.getElementsByTagName("body").appendChild(browser);
+    browser.classList.remove("hidden");
+    document.getElementsByTagName("body")[0].appendChild(browser);
+    tabCount++;
+    var currTC = tabCount;
     tab_clone.addEventListener("click",function(event){
         disableWebviews();
-        browser.classList.remove("hidden");
+        selectTab(currTC);
     });
     tabContainer.appendChild(tab_clone);
+    addWebviewListeners(browser,currTC);
+    disableWebviews();
+    selectTab(tabCount);
 }
 function disableWebviews(){
-    let browser = document.getElementsByClassName("browser");
-    for(var i;i<browser.length;i++){
-        if(!browser.classList.contains("hidden"))
+    var browser = document.getElementsByClassName("browser");
+    for(var i=0;i<browser.length;i++){
+        if(!browser[i].classList.contains("hidden"))
         browser[i].classList.add("hidden");
     }
+}
+function selectTab(num){
+    disableWebviews();
+    currentTab = num;
+    if(document.getElementsByClassName("selected")[0]!=null)
+    document.getElementsByClassName("selected")[0].classList.remove("selected");
+    document.getElementsByClassName("tab")[num].classList.add("selected");
+    document.getElementsByClassName("browser")[num].classList.remove("hidden");
+    webview = document.getElementsByClassName("browser")[num];
 }
 function setToggle(menu){
     option = document.getElementsByClassName(menu)[0];
@@ -166,16 +183,16 @@ function toggleOff(menu){
     if(option.classList.contains("toggle"))
         option.classList.remove("toggle");
 }
-function addWebviewListeners(wview){
+function addWebviewListeners(wview,tab){
     wview.addEventListener("did-start-loading",function(){
-        document.getElementsByClassName("tab-title")[1].innerHTML = "Loading...";
+        document.getElementsByClassName("tab-title")[tab].innerHTML = "Loading...";
     });
     wview.addEventListener("dom-ready",function(){
-        document.getElementsByClassName("tab-title")[1].innerHTML = snipTitle(wview.getTitle());
+        document.getElementsByClassName("tab-title")[tab].innerHTML = snipTitle(wview.getTitle());
         searchBar.value = wview.getURL();
     });
     wview.addEventListener("did-stop-loading",function(){
-        document.getElementsByClassName("tab-title")[1].innerHTML = snipTitle(wview.getTitle());
+        document.getElementsByClassName("tab-title")[tab].innerHTML = snipTitle(wview.getTitle());
         searchBar.value = wview.getURL();
     });
     wview.addEventListener('new-window', (e) => {
@@ -195,10 +212,8 @@ function openNewWindow(link){
 }
 
 function start(){
-    webview = document.getElementsByClassName("browser")[1];
     searchBar = document.getElementById("search-field");
     loadListeners();
-    addWebviewListeners(webview);
 }
 document.addEventListener("DOMContentLoaded",function(){
     start();
